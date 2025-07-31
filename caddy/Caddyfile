@@ -1,0 +1,23 @@
+flows.yourdomain.com {
+    reverse_proxy n8n:5678
+}
+
+crm.yourdomain.com {
+    reverse_proxy espocrm:80
+}
+
+social.yourdomain.com {
+    reverse_proxy mixpost:80
+}
+
+insights.yourdomain.com {
+    reverse_proxy posthog:8000
+}
+
+leads.yourdomain.com {
+    reverse_proxy formbricks:3000
+}
+
+dock.yourdomain.com {
+    reverse_proxy portainer:9000
+}
