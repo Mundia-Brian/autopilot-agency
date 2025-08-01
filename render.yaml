@@ -2,7 +2,7 @@ services:
   - type: web
     name: n8n
     env: docker
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
+    repo: https://github.com/Mundia-Brian/autopilot-agency
     region: oregon
     plan: free
     branch: master
