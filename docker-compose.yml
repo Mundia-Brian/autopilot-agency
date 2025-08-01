@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - 5678:5678
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=changeme
+    volumes:
+      - ./n8n:/home/node/.n8n
+
+  espocrm:
+    image: espocrm/espocrm
+    ports:
+      - 8080:80
+    volumes:
+      - ./espocrm:/var/www/html
+
+  mixpost:
+    image: inisev/mixpost
+    ports:
+      - 8020:80
+    volumes:
+      - ./mixpost:/var/www/html
+
+  posthog:
+    image: posthog/posthog:latest
+    ports:
+      - 8000:8000
+    environment:
+      - CLICKHOUSE_HOST=clickhouse
+      - DATABASE_URL=postgres://posthog:changeme@postgres/posthog
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+      - postgres
+      - clickhouse
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: posthog
+      POSTGRES_USER: posthog
+      POSTGRES_PASSWORD: changeme
+
+  redis:
+    image: redis:alpine
+
+  clickhouse:
+    image: yandex/clickhouse-server
+
+  formbricks:
+    image: formbricks/formbricks
+    ports:
+      - 3000:3000
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+
+  portainer:
+    image: portainer/portainer-ce
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+volumes:
+  portainer_data:

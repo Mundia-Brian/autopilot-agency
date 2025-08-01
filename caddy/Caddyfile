@@ -1,0 +1,23 @@
+flows.web-designs.store {
+    reverse_proxy n8n:5678
+}
+
+crm.web-designs.store {
+    reverse_proxy espocrm:80
+}
+
+social.web-designs.store {
+    reverse_proxy mixpost:80
+}
+
+insights.web-designs.store {
+    reverse_proxy posthog:8000
+}
+
+leads.web-designs.store {
+    reverse_proxy formbricks:3000
+}
+
+dock.web-designs.store {
+    reverse_proxy portainer:9000
+}
