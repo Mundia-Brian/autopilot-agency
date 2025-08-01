@@ -2,118 +2,92 @@ services:
   - type: web
     name: n8n
     env: docker
-    repo: https://github.com/Mundia-Brian/autopilot-agency
-    region: oregon
     plan: free
-    branch: master
-    dockerfilePath: ./services/n8n/Dockerfile
-    autoDeploy: true
+    dockerfilePath: ./n8n/Dockerfile
     envVars:
+      - key: DB_CONNECTION
+        value: postgresdb
+      - key: DB_TYPE
+        value: postgres
+      - key: DB_POSTGRESDB
+        value: n8n
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: n8n-db
+          property: connectionString
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
       - key: N8N_BASIC_AUTH_USER
         value: admin
       - key: N8N_BASIC_AUTH_PASSWORD
-        value: secure123
-      - key: DB_TYPE
-        value: postgresdb
-      - key: DB_POSTGRESDB_DATABASE
-        fromService:
-          type: postgres
-          name: agency-db
-          property: database
-      - key: DB_POSTGRESDB_USER
-        fromService:
-          type: postgres
-          name: agency-db
-          property: user
-      - key: DB_POSTGRESDB_PASSWORD
-        fromService:
-          type: postgres
-          name: agency-db
-          property: password
-      - key: DB_POSTGRESDB_HOST
-        fromService:
-          type: postgres
-          name: agency-db
-          property: host
+        value: strongpassword
+      - key: WEBHOOK_URL
+        value: https://n8n.onrender.com/
+
+  - type: pserv
+    name: n8n-db
+    env: docker
+    plan: free
+    dockerfilePath: ./postgres/Dockerfile
+    envVars:
+      - key: POSTGRES_DB
+        value: n8n
+      - key: POSTGRES_USER
+        value: n8nuser
+      - key: POSTGRES_PASSWORD
+        value: n8npassword
 
   - type: web
     name: espocrm
     env: docker
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
-    region: oregon
     plan: free
-    branch: master
-    dockerfilePath: ./services/espocrm/Dockerfile
-    autoDeploy: true
+    dockerfilePath: ./espocrm/Dockerfile
     envVars:
-      - key: DB_HOST
+      - key: DATABASE_URL
         fromService:
-          type: postgres
-          name: agency-db
-          property: host
-      - key: DB_USER
-        fromService:
-          type: postgres
-          name: agency-db
-          property: user
-      - key: DB_PASSWORD
-        fromService:
-          type: postgres
-          name: agency-db
-          property: password
-      - key: DB_NAME
-        fromService:
-          type: postgres
-          name: agency-db
-          property: database
+          type: pserv
+          name: espocrm-db
+          property: connectionString
+
+  - type: pserv
+    name: espocrm-db
+    env: docker
+    plan: free
+    dockerfilePath: ./postgres/Dockerfile
+    envVars:
+      - key: POSTGRES_DB
+        value: espocrm
+      - key: POSTGRES_USER
+        value: crmuser
+      - key: POSTGRES_PASSWORD
+        value: crmpassword
 
   - type: web
     name: posthog
     env: docker
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
-    region: oregon
     plan: free
-    branch: master
-    dockerfilePath: ./services/posthog/Dockerfile
-    autoDeploy: true
+    dockerfilePath: ./posthog/Dockerfile
     envVars:
       - key: DATABASE_URL
         fromService:
-          type: postgres
-          name: agency-db
+          type: pserv
+          name: posthog-db
           property: connectionString
 
-  - type: web
-    name: mixpost
+  - type: pserv
+    name: posthog-db
     env: docker
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
-    region: oregon
     plan: free
-    branch: master
-    dockerfilePath: ./services/mixpost/Dockerfile
-    autoDeploy: true
+    dockerfilePath: ./postgres/Dockerfile
     envVars:
-      - key: DB_CONNECTION
-        value: pgsql
-      - key: DB_HOST
-        fromService:
-          type: postgres
-          name: agency-db
-          property: host
-      - key: DB_DATABASE
-        fromService:
-          type: postgres
-          name: agency-db
-          property: database
-      - key: DB_USERNAME
-        fromService:
-          type: postgres
-          name: agency-db
-          property: user
-      - key: DB_PASSWORD
-        fromService:
-          type: postgres
-          name: agency-db
+      - key: POSTGRES_DB
+        value: posthog
+      - key: POSTGRES_USER
+        value: posthoguser
+      - key: POSTGRES_PASSWORD
+        value: posthogpassword
+
           property: password
 
 databases:
