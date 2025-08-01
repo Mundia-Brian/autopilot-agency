@@ -1,0 +1,121 @@
+services:
+  - type: web
+    name: n8n
+    env: docker
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
+    region: oregon
+    plan: free
+    branch: master
+    dockerfilePath: ./services/n8n/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: secure123
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_DATABASE
+        fromService:
+          type: postgres
+          name: agency-db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromService:
+          type: postgres
+          name: agency-db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromService:
+          type: postgres
+          name: agency-db
+          property: password
+      - key: DB_POSTGRESDB_HOST
+        fromService:
+          type: postgres
+          name: agency-db
+          property: host
+
+  - type: web
+    name: espocrm
+    env: docker
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
+    region: oregon
+    plan: free
+    branch: master
+    dockerfilePath: ./services/espocrm/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: DB_HOST
+        fromService:
+          type: postgres
+          name: agency-db
+          property: host
+      - key: DB_USER
+        fromService:
+          type: postgres
+          name: agency-db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: postgres
+          name: agency-db
+          property: password
+      - key: DB_NAME
+        fromService:
+          type: postgres
+          name: agency-db
+          property: database
+
+  - type: web
+    name: posthog
+    env: docker
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
+    region: oregon
+    plan: free
+    branch: master
+    dockerfilePath: ./services/posthog/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: postgres
+          name: agency-db
+          property: connectionString
+
+  - type: web
+    name: mixpost
+    env: docker
+    repo: https://github.com/YOUR_USERNAME/YOUR_REPO
+    region: oregon
+    plan: free
+    branch: master
+    dockerfilePath: ./services/mixpost/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromService:
+          type: postgres
+          name: agency-db
+          property: host
+      - key: DB_DATABASE
+        fromService:
+          type: postgres
+          name: agency-db
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          type: postgres
+          name: agency-db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: postgres
+          name: agency-db
+          property: password
+
+databases:
+  - name: agency-db
+    plan: free
