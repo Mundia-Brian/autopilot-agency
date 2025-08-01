@@ -1,92 +1,20 @@
 services:
   - type: web
-    name: n8n
-    env: docker
+    name: my-app
+    env: node
     plan: free
-    dockerfilePath: ./n8n/Dockerfile
-    envVars:
-      - key: DB_CONNECTION
-        value: postgresdb
-      - key: DB_TYPE
-        value: postgres
-      - key: DB_POSTGRESDB
-        value: n8n
-      - key: DATABASE_URL
-        fromService:
-          type: pserv
-          name: n8n-db
-          property: connectionString
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
-      - key: N8N_BASIC_AUTH_USER
-        value: admin
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: strongpassword
-      - key: WEBHOOK_URL
-        value: https://n8n.onrender.com/
-
-  - type: pserv
-    name: n8n-db
-    env: docker
-    plan: free
-    dockerfilePath: ./postgres/Dockerfile
-    envVars:
-      - key: POSTGRES_DB
-        value: n8n
-      - key: POSTGRES_USER
-        value: n8nuser
-      - key: POSTGRES_PASSWORD
-        value: n8npassword
-
-  - type: web
-    name: espocrm
-    env: docker
-    plan: free
-    dockerfilePath: ./espocrm/Dockerfile
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: DATABASE_URL
         fromService:
           type: pserv
-          name: espocrm-db
+          name: my-postgres
           property: connectionString
 
-  - type: pserv
-    name: espocrm-db
-    env: docker
+databases:
+  - name: my-postgres
     plan: free
-    dockerfilePath: ./postgres/Dockerfile
-    envVars:
-      - key: POSTGRES_DB
-        value: espocrm
-      - key: POSTGRES_USER
-        value: crmuser
-      - key: POSTGRES_PASSWORD
-        value: crmpassword
-
-  - type: web
-    name: posthog
-    env: docker
-    plan: free
-    dockerfilePath: ./posthog/Dockerfile
-    envVars:
-      - key: DATABASE_URL
-        fromService:
-          type: pserv
-          name: posthog-db
-          property: connectionString
-
-  - type: pserv
-    name: posthog-db
-    env: docker
-    plan: free
-    dockerfilePath: ./postgres/Dockerfile
-    envVars:
-      - key: POSTGRES_DB
-        value: posthog
-      - key: POSTGRES_USER
-        value: posthoguser
-      - key: POSTGRES_PASSWORD
-        value: posthogpassword
 
           property: password
 
