@@ -1,23 +1,23 @@
-flows.yourdomain.com {
+flows.web-designs.store {
     reverse_proxy n8n:5678
 }
 
-crm.yourdomain.com {
+crm.web-designs.store {
     reverse_proxy espocrm:80
 }
 
-social.yourdomain.com {
+social.web-designs.store {
     reverse_proxy mixpost:80
 }
 
-insights.yourdomain.com {
+insights.web-designs.store {
     reverse_proxy posthog:8000
 }
 
-leads.yourdomain.com {
+leads.web-designs.store {
     reverse_proxy formbricks:3000
 }
 
-dock.yourdomain.com {
+dock.web-designs.store {
     reverse_proxy portainer:9000
 }
